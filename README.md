@@ -64,3 +64,13 @@ projet-boot-discord/
 ├── test_history_manager.py
 ├── test_conversation_manager.py
 └── test_persistence.py
+
+## ✅ Tests rapides :
+
+1. `!helpme` → répondre: `python` puis `oui` → réponse finale
+2. `!history` → affiche les commandes
+3. `!clearhistory` → vide l'historique
+4. `!save` → sauvegarde JSON (data/*)
+5. `!stats` → total de commandes
+6. `!export` → reçoit un .txt
+7. (Lock, si 2 comptes) : A fait `!lockhistory`, B tente `!history` (refus), A `!unlockhistory`
