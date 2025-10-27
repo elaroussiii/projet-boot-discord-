@@ -174,39 +174,40 @@ async def export(ctx):
 
     await ctx.send(file=discord.File(filename))
 
+
 # -------------------------------------
-# Listener global (messages)
+# Listener global (messages) - corrigé anti-doublons
 # -------------------------------------
 @bot.listen("on_message")
 async def log_and_converse(message):
-    # Ignorer le bot lui-même
-    if message.author == bot.user:
+    # Ignore les bots (dont toi-même)
+    if message.author.bot:
         return
 
     user_id = message.author.id
     content = message.content.strip()
 
-    # Historique des commandes (si préfixe !)
+    # 1) Commandes (préfixe) : on LOG l'historique puis on STOP.
     if content.startswith(COMMAND_PREFIX):
         holder, _ = locksys.status("history")
-        # Autoriser si pas de lock OU si c'est le détenteur actuel
+        # Autoriser l'écriture si pas de lock ou si c'est le détenteur actuel
         if holder is None or holder == user_id:
             history.add_command(user_id, content)
 
-    # Si l’utilisateur est en conversation active (messages sans préfixe)
-    if not content.startswith(COMMAND_PREFIX):
-        st = conversation._state.get(user_id)
-        if st and st.get("node") is not None:
-            reply = conversation.handle_user_message(user_id, content)
-            if reply:
-                await message.channel.send(reply)
+        # Très important :
+        # NE PAS APPELER bot.process_commands ici.
+        # Avec @bot.listen, discord.py gère déjà les commandes tout seul.
+        # On sort pour éviter d'enchaîner la logique "conversation" et/ou doubler la commande.
+        return
 
-    # S'assurer que les commandes fonctionnent même avec ce listener
-    await bot.process_commands(message)
+    # 2) Messages SANS préfixe : gestion de la conversation active
+    st = conversation._state.get(user_id)
+    if st and st.get("node") is not None:
+        reply = conversation.handle_user_message(user_id, content)
+        if reply:
+            await message.channel.send(reply)
+# -------------------------------------
 
-# -------------------------------------
-# Lancement du bot
-# -------------------------------------
 if __name__ == "__main__":
     token = get_token()
     bot.run(token)
