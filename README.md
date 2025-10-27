@@ -32,3 +32,35 @@ Bot Discord pédagogique qui démontre l’usage de **structures de données cod
 ### Bonus :
 - `!stats` → affiche combien de commandes tu as utilisées
 - `!export` → exporte ton historique dans un fichier texte et l’envoie
+
+## 🧱 Partie technique :
+
+### Structures de données implémentées :
+- **Liste chaînée (LinkedList)** → utilisée pour stocker l’historique des commandes utilisateur
+- **File (Queue)** → utilisée dans le système de lock pour gérer une file d’attente
+- **Arbre (TreeNode)** → utilisé dans la conversation guidée (navigation dans un questionnaire)
+- **Hashtable** → permet d’associer un `user_id` Discord à ses données (historique, état de conversation, etc.)
+
+Toutes ces structures ont été codées **à la main** (sans utiliser les collections Python intégrées).
+
+---
+
+### 🗂 Arborescence du projet :
+
+projet-boot-discord/
+├── bot_config.py
+├── main.py
+├── features/
+│ ├── history_manager.py
+│ └── conversation_manager.py
+├── structures/
+│ ├── linked_list.py
+│ ├── hashtable.py
+│ └── queue.py
+├── utils/
+│ ├── persistence.py
+│ └── lock_system.py
+├── data/ # fichiers JSON (créés automatiquement, ignorés par Git)
+├── test_history_manager.py
+├── test_conversation_manager.py
+└── test_persistence.py
